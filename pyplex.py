@@ -207,7 +207,7 @@ if __name__ == "__main__":
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         f = open(os.path.join(__location__, 'image/logo.png'));
         image = image(f)
-#        image.set()
+        image.set()
         while True:
             try:
                 command, args = queue.get(True, 2)
