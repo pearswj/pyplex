@@ -1,7 +1,7 @@
 import web, urllib2, re, xml.etree.cElementTree as et
 from pyomxplayer import OMXPlayer
 from urlparse import urlparse
-import avahi, dbus, sys
+import avahi, dbus, sys, platform
 from pprint import pprint
 import socket, pygame.image, pygame.display, subprocess, signal, os, logging
 from threading import Thread
@@ -92,7 +92,7 @@ class xbmcCommands:
             if(ret == 0):
                 self.omx.toggle_pause()
 
-    def Stop(self, message):
+    def Stop(self, message=""):
         if(self.omx):
             self.omx.stop()
             self.omx = None
@@ -179,6 +179,7 @@ http = None
 udp = None
 
 if __name__ == "__main__":
+    hostname = platform.uname()[1]
     try:
         print "starting, please wait..."
         global service
@@ -199,7 +200,7 @@ if __name__ == "__main__":
         media_key = None
         parsed_path = None
         queue = Queue.Queue()
-        service = ZeroconfService(name="Raspberry Plex", port=3000, text=["machineIdentifier=pi","version=2.0"])
+        service = ZeroconfService(name= hostname + " PyPlex", port=3000, text=["machineIdentifier=" + hostname,"version=2.0"])
         service.publish()
         udp = udplistener.udplistener(queue)
         udp.start()
