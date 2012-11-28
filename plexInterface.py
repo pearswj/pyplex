@@ -1,4 +1,4 @@
-import web, urllib2, re, xml.etree.cElementTree as et
+import urllib2, re, xml.etree.cElementTree as et
 from urllib import urlencode
 from urlparse import urlparse
 import uuid, hmac, hashlib, base64, time 
