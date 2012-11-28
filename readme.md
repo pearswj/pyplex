@@ -36,7 +36,17 @@ Then 'Raspberry Plex' should appear as a player you can choose in your Plex
 client. Choose your media, and select this as the player to play it on. It should 
 begin playing on your Raspberry Pi! 
 
-I must reiterate how bare-bones this is. Once you start playing the media, you either
-wait for it to finish, or 
-    
-    killall omxplayer.bin
+To control playback you can use the remote tab on your iDevice or android device.
+Currently the following commands are supported:
+```
+Play
+Pauze
+Fastforward
+Fastbackward
+Stop
+```
+
+Support can be found on the [Plex forum][plexForum] 
+
+
+[plexForum]: http://forums.plexapp.com/index.php/topic/35906-raspberry-pi
