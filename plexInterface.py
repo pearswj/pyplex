@@ -61,7 +61,7 @@ class PlexMedia:
         args['ratingKey'] = self.mediaKey
         args['key'] = self.transcodeBaseURL + "/library/metadata/%s" % self.mediaKey
         args["identifier"] = "com.plexapp.plugins.library"
-        args["quality"] = 7
+        args["quality"] = 20
         args["url"] = self.fileURL
 #        if(audioCodec):
 #            args["audioCodec"] = audioCodec
