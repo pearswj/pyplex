@@ -74,7 +74,7 @@ class xbmcCommands:
         parsed_path = urlparse(fullpath)
         media_path = parsed_path.scheme + "://" + parsed_path.netloc + tag
 
-        self.media = self.plex.getMedia(fullpath)
+        self.media = self.plex.getMedia(media_path)
         
         #print 'mediapath', mediapath
         if(self.omx):
