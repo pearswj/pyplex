@@ -1,4 +1,4 @@
-import web, urllib2, re, xml.etree.cElementTree as et
+import urllib2, re, xml.etree.cElementTree as et
 from urllib import urlencode
 from urlparse import urlparse
 import uuid, hmac, hashlib, base64, time 
@@ -6,6 +6,7 @@ import uuid, hmac, hashlib, base64, time
 class PlexMedia:
     def __init__(self, mediaurl):
         self.media_url = mediaurl
+        
         
         f = urllib2.urlopen(mediaurl)
         rawXML = f.read()

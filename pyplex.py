@@ -1,4 +1,4 @@
-import web, urllib2, re, xml.etree.cElementTree as et
+import urllib2, re, xml.etree.cElementTree as et
 from pyomxplayer import OMXPlayer
 from urlparse import urlparse
 import avahi, dbus, sys, platform
@@ -54,7 +54,6 @@ urls = (
     '/xbmcCmds/xbmcHttp','xbmcCmdsXbmcHttp',
     '/(.*)', 'stop', 'hello'
 )
-app = web.application(urls, globals())
 
 class hello:        
     def GET(self, message):
@@ -71,6 +70,9 @@ class xbmcCommands:
         global parsed_path
         global media_key
         global duration
+        
+        parsed_path = urlparse(fullpath)
+        media_path = parsed_path.scheme + "://" + parsed_path.netloc + tag
 
         self.media = self.plex.getMedia(fullpath)
         
