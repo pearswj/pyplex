@@ -29,6 +29,7 @@ class OMXPlayer(object):
     subtitles_visible = True
 
     def __init__(self, mediafile, args=None, start_playback=False):
+        self.position = 0
         if not args:
             args = ""
         cmd = self._LAUNCH_CMD % (mediafile, args)
@@ -52,7 +53,7 @@ class OMXPlayer(object):
         prop_matches = 0
         self.finished = False
 
-        while(True):
+        for i in range (0, 6):
             line = self._process.readline()
             file_props_match = self._FILEPROP_REXP.match(line)
             video_props_match = self._VIDEOPROP_REXP.match(line)
