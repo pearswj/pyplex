@@ -7,6 +7,7 @@ class PlexMedia:
     def __init__(self, mediaurl):
         self.media_url = mediaurl
         
+        
         f = urllib2.urlopen(mediaurl)
         rawXML = f.read()
         f.close()

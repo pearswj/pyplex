@@ -70,8 +70,11 @@ class xbmcCommands:
         global parsed_path
         global media_key
         global duration
+        
+        parsed_path = urlparse(fullpath)
+        media_path = parsed_path.scheme + "://" + parsed_path.netloc + tag
 
-        self.media = self.plex.getMedia(fullpath)
+        self.media = self.plex.getMedia(media_path)
         
         #print 'mediapath', mediapath
         if(self.omx):
