@@ -48,6 +48,7 @@ class xbmcCommands:
     #     self.Stop()
     #     global service
     #     pygame.quit()
+    #     exit()
 
     def SkipNext(self, message = None):
         if(self.omx):
@@ -106,3 +107,6 @@ class xbmcCommands:
             self.Stop()
         else:
             self.media.updatePosition(self.getPosMilli())
+
+# test = xbmcCommands('')
+# test.PlayMedia('http://192.168.1.201:32400/library/onDeck', '/library/metadata/1713', '+', ' ', ' ')
