@@ -208,10 +208,10 @@ if __name__ == "__main__":
         udp.start()
         http = httplistener.httplistener(queue)
         http.start()
-        __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        f = open(os.path.join(__location__, 'image/logo.png'));
-        image = image(f)
-        image.set()
+        #__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        #f = open(os.path.join(__location__, 'image/logo.png'));
+        #image = image(f)
+        #image.set()
         while True:
             try:
                 command, args = queue.get(True, 2)
