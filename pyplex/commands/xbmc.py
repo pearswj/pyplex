@@ -1,4 +1,7 @@
-from pyplex.interfaces.plexInterface import PlexInterface
+from interfaces.plexInterface import PlexInterface
+from pyomx.pyomxplayer import OMXPlayer
+# import urllib2, re, xml.etree.cElementTree as et
+from urlparse import urlparse
 
 class xbmcCommands:
     def __init__(self, omxArgs):
@@ -8,6 +11,7 @@ class xbmcCommands:
         self.omxArgs = omxArgs
 
     def PlayMedia(self, fullpath, tag, unknown1, unknown2, unknown3):
+        print "playing media!"
         global parsed_path
         global media_key
         global duration
@@ -40,11 +44,10 @@ class xbmcCommands:
             self.omx.stop()
             self.omx = None
 
-    def stopPyplex(self, message):
-        self.Stop()
-        global service
-        pygame.quit()
-        exit()
+    # def stopPyplex(self, message):
+    #     self.Stop()
+    #     global service
+    #     pygame.quit()
 
     def SkipNext(self, message = None):
         if(self.omx):
