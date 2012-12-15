@@ -1,12 +1,12 @@
 from commands.xbmc import xbmcCommands
 from gui.image import image
 import platform
-from pprint import pprint
 from listeners.udplistener import udplistener
 from listeners.httplistener import httplistener
 from pyomx.pyomxplayer import OMXPlayer
 from service.zeroconf import ZeroconfService
 import Queue
+from pprint import pprint
 # from interfaces.plexInterface import plexInterface
 # from interfaces.plexInterface
 # from listners.httplistner import
@@ -17,9 +17,9 @@ class pyPlex():
 		self.hostname = platform.uname()[1]
 
 	def start(self):
-		"""Start listners and all other stuff"""
+		"""Setting up listners and all other stuff"""
 		# try:
-		print "starting, please wait..."
+		print "Setting up listeners, please wait..."
 		global service
 		global queue
 		global parsed_path
@@ -45,52 +45,35 @@ class pyPlex():
 		
 	def run(self):
 		"""Run pyPlex"""
-		hostname = platform.uname()[1]
+		print "Starting pyPlex..."
 		try:
-			# print "starting, please wait..."
-			# global service
-			# global queue
-			# global parsed_path
-			# global media_key
-			# global duration
-			# duration = 0
-			# xbmcCmmd = xbmcCommands(self.omxCommand)
-			# media_key = None
-			# parsed_path = None
-			# queue = Queue.Queue()
-			# service = ZeroconfService(name= self.hostname + " PyPlex", port=3000, text=["machineIdentifier=" + hostname,"version=2.0"])
-			# service.publish()
-			# udp = udplistener.udplistener(queue)
-			# udp.start()
-			# http = httplistener.httplistener(queue)
-			# http.start()
-			# __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-			# f = open(os.path.join(__location__, 'image/logo.png'));
-			# image = image(f)
-			#image.set()
 			while True:
 				try:
-					command, args = queue.get(True, 2)
+					command, args = self.queue.get(True, 2)
 					print "Got command: %s, args: %s" %(command, args)
-					if not hasattr(xbmcCmmd, command):
+					if not hasattr(self.xbmcCmmd, command):
 						print "Command %s not implemented yet" % command
 					else:
-						func = getattr(xbmcCmmd, command)
+						func = getattr(self.xbmcCmmd, command)
+						pprint(func)
 						func(*args)
 	                # service.unpublish()
 				except Queue.Empty:
 					pass
-				if(xbmcCmmd.isRunning()):
+				if(self.xbmcCmmd.isRunning()):
 					# print omx.position
-					xbmcCmmd.updatePosition()
+					self.xbmcCmmd.updatePosition()
 		except:
 			print "Caught exception"
-			if(xbmcCmmd):
-				xbmcCmmd.Stop("")
+			if(self.xbmcCmmd):
+				print '%s is de boosdoener!' % ('xbmc')
+				self.xbmcCmmd.Stop("")
 			if(udp):
+				print '%s is de boosdoener!' % ('udp')
 				udp.stop()
 				udp.join()
 			if(http):
+				print '%s is de boosdoener!' % ('http')
 				http.stop()
 				http.join()
 			raise
