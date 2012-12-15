@@ -3,7 +3,6 @@ from gui.image import image
 import platform
 from listeners.udplistener import udplistener
 from listeners.httplistener import httplistener
-from pyomx.pyomxplayer import OMXPlayer
 from service.zeroconf import ZeroconfService
 import Queue
 from pprint import pprint
@@ -48,18 +47,18 @@ class pyPlex():
 		print "Starting pyPlex..."
 		try:
 			while True:
-				try:
-					command, args = self.queue.get(True, 2)
-					print "Got command: %s, args: %s" %(command, args)
-					if not hasattr(self.xbmcCmmd, command):
-						print "Command %s not implemented yet" % command
-					else:
-						func = getattr(self.xbmcCmmd, command)
-						pprint(func)
-						func(*args)
-	                # service.unpublish()
-				except Queue.Empty:
-					pass
+				self.parseCommand()
+				# try:
+				# 	command, args = self.queue.get(True, 2)
+				# 	print "Got command: %s, args: %s" %(command, args)
+				# 	if not hasattr(self.xbmcCmmd, command):
+				# 		print "Command %s not implemented yet" % command
+				# 	else:
+				# 		func = getattr(self.xbmcCmmd, command)
+				# 		func(*args)
+	   #              # service.unpublish()
+				# except Queue.Empty:
+				# 	pass
 				if(self.xbmcCmmd.isRunning()):
 					# print omx.position
 					self.xbmcCmmd.updatePosition()
@@ -86,3 +85,16 @@ class pyPlex():
 		else:
 			self.omxCommand = ''
 			print "Audio output over 3,5mm jack"
+
+	def parseCommand(self):
+		try:
+			command, args = self.queue.get(True, 2)
+			print "Got command: %s, args: %s" %(command, args)
+			if not hasattr(self.xbmcCmmd, command):
+				print "Command %s not implemented yet" % command
+			else:
+				func = getattr(self.xbmcCmmd, command)
+				func(*args)
+	        # service.unpublish()
+		except Queue.Empty:
+			pass
