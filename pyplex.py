@@ -11,12 +11,20 @@
 # import httplistener
 # from pyplex.commands.xbmc import xbmcCommands
 # from pyplex.interfaces.plexInterface import PlexInterface
-from pyplex.pyplexclass import pyPlex
+from pyplex.interface import pyPlex
+import sys
+from pprint import pprint
 
 #this is kind of my idea...
 if __name__ == "__main__":
-    plex = pyPlex
-    plex.run()
+	args = sys.argv
+	pprint(args)
+	plex = pyPlex(args)
+	plex.start()
+	try:
+		plex.run()
+	except:
+		"error while trying to start pyplex"
 
 # exit()
 # urls = (
