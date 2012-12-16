@@ -9,6 +9,7 @@ class xbmcCommands:
         self.plex = PlexInterface()
         self.omx = None
         self.omxArgs = omxArgs
+        self.shutDown = False
 
     def PlayMedia(self, fullpath, tag, unknown1, unknown2, unknown3):
         print "playing media!"
@@ -44,11 +45,8 @@ class xbmcCommands:
             self.omx.stop()
             self.omx = None
 
-    # def stopPyplex(self, message):
-    #     self.Stop()
-    #     global service
-    #     pygame.quit()
-    #     exit()
+    def stopPyplex(self, message = None):
+        self.shutDown = True
 
     def SkipNext(self, message = None):
         if(self.omx):
@@ -110,3 +108,4 @@ class xbmcCommands:
 
 # test = xbmcCommands('')
 # test.PlayMedia('http://192.168.1.201:32400/library/onDeck', '/library/metadata/1713', '+', ' ', ' ')
+# self.stopPyplex()
