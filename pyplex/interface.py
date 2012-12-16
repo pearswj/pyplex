@@ -6,19 +6,22 @@ from listeners.httplistener import httplistener
 from service.zeroconf import ZeroconfService
 import Queue
 from pprint import pprint
+from pyplexlogger.logger import pyPlexLogger
 # from interfaces.plexInterface import plexInterface
 # from interfaces.plexInterface
 # from listners.httplistner import
 class pyPlex():
 	"""Wrapper class for pyPlex"""
 	def __init__(self, arg):
+		self.l = pyPlexLogger('pyplex').logger
+		self.l.info('Pyplex initaited')
 		self.omxCommand = self.getArg(arg)
 		self.hostname = platform.uname()[1]
 
 	def start(self):
 		"""Setting up listners and all other stuff"""
-		# try:
 		print "Setting up listeners, please wait..."
+		self.l.info("Setting up listeners")
 		global service
 		global queue
 		global parsed_path
@@ -39,12 +42,11 @@ class pyPlex():
 		# f = open(os.path.join(__location__, 'image/logo.png'));
 		# image = image(f)
 		#image.set()
-		# except:
-		# 	print "error accoured"
 		
 	def run(self):
 		"""Run pyPlex"""
 		print "Starting pyPlex..."
+		self.l.info("Running pyplex")
 		try:
 			while True:
 				command = self.parseCommand()
@@ -82,6 +84,7 @@ class pyPlex():
 			if arg[1] == "hdmi":
 				self.omxCommand = '-o hdmi'
 				print "Audo output over HDMI"
+				self.l.info("Audo output over HDMI")
 		else:
 			self.omxCommand = ''
 			print "Audio output over 3,5mm jack"
@@ -103,3 +106,5 @@ class pyPlex():
 		self.udp.stop()
 		self.http.stop()
 		self.service.unpublish()
+
+		

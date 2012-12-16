@@ -1,10 +1,12 @@
 from interfaces.plexInterface import PlexInterface
 from pyomx.pyomxplayer import OMXPlayer
-# import urllib2, re, xml.etree.cElementTree as et
 from urlparse import urlparse
+from ..pyplexlogger.logger import pyPlexLogger
 
 class xbmcCommands:
     def __init__(self, omxArgs):
+        self.l = pyPlexLogger("xbmcCommands").logger
+        self.l.info('Initated xbmcCommands')
         self.media = None
         self.plex = PlexInterface()
         self.omx = None
@@ -12,7 +14,7 @@ class xbmcCommands:
         self.shutDown = False
 
     def PlayMedia(self, fullpath, tag, unknown1, unknown2, unknown3):
-        print "playing media!"
+        self.l.info("playing media!")
         global parsed_path
         global media_key
         global duration
