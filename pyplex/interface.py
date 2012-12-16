@@ -47,35 +47,32 @@ class pyPlex():
 		print "Starting pyPlex..."
 		try:
 			while True:
-				try:
-					command, args = self.queue.get(True, 2)
-					print "Got command: %s, args: %s" %(command, args)
-					classes = [self.xbmcCmmd, self]
-					for _class in classes:
-						if not hasattr(_class, command):
-							print "Command %s not implemented in %s" % command, _class.__class__.__name__
-						else:
-							func = getattr(_class, command)
-							func(*args)
-				except Queue.Empty:
-					pass
-				# func, args = self.parseCommand()
-				# print "Function is: %s" % func
-				# print "argument is: %s" % args
-				
-				if(self.xbmcCmmd.isRunning()):
-					self.xbmcCmmd.updatePosition()
-		except:
+				command = self.parseCommand()
+				if command:
+					func, args = command
+					func(*args)
+					if(self.xbmcCmmd.shutDown):
+						self.stop()
+						return 0
+					if(self.xbmcCmmd.isRunning()):
+						self.xbmcCmmd.updatePosition()
+		except Exception, e:
 			print "Caught exception"
+			message = 'There went something wrong in %s'
 			if(self.xbmcCmmd):
-				print '%s is de boosdoener!' % ('xbmc')
+				print message % 'xbmc'
+				print e
 				self.xbmcCmmd.Stop("")
+				self.stop()
+				return 0
 			if(udp):
-				print '%s is de boosdoener!' % ('udp')
+				print message % 'udp'
+				print e
 				self.udp.stop()
 				self.udp.join()
 			if(http):
-				print '%s is de boosdoener!' % ('http')
+				print message % 'http'
+				print e
 				self.http.stop()
 				self.http.join()
 			raise
@@ -89,22 +86,20 @@ class pyPlex():
 			self.omxCommand = ''
 			print "Audio output over 3,5mm jack"
 
-	# def parseCommand(self):
-	# 	try:
-	# 		command, args = self.queue.get(True, 2)
-	# 		print "Got command: %s, args: %s" %(command, args)
-	# 		classes = [self.xbmcCmmd, self]
-	# 		for _class in classes:
-	# 			if not hasattr(_class, command):
-	# 				print "Command %s not implemented in %s" % command, _class.__class__.__name__
-	# 			else:
-	# 				func = getattr(_class, command)
-	# 		return [func, args]
-	# 	except Queue.Empty:
-	# 		pass
+	def parseCommand(self):
+		try:
+			command, args = self.queue.get(True, 2)
+			print "Got command: %s, args: %s" %(command, args)
+			if not hasattr(self.xbmcCmmd, command):
+				print "Command %s not implemented yet" % command
+			else:
+				func = getattr(self.xbmcCmmd, command)
+				return [func, args]
+		except Queue.Empty:
+			pass
 
-	def stopPyplex(self):
-		self.xbmcCmmd.stop("")
+	def stop(self):
+		self.xbmcCmmd.Stop("")
 		self.udp.stop()
 		self.http.stop()
 		self.service.unpublish()
