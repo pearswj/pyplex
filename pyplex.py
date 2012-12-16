@@ -5,7 +5,6 @@ from pprint import pprint
 
 if __name__ == "__main__":
 	args = sys.argv
-	pprint(args)
 	plex = pyPlex(args)
 	plex.start()
 	try:
