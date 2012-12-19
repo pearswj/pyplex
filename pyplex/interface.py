@@ -53,11 +53,9 @@ class pyPlex():
 				if command:
 					func, args = command
 					func(*args)
-					if(self.xbmcCmmd.shutDown):
-						self.stop()
-						return 0
 					if(self.xbmcCmmd.isRunning()):
 						self.xbmcCmmd.updatePosition()
+					return self.keepRunning()			
 		except Exception, e:
 			print "Caught exception"
 			message = 'There went something wrong in %s'
@@ -106,5 +104,12 @@ class pyPlex():
 		self.udp.stop()
 		self.http.stop()
 		self.service.unpublish()
+
+	def keepRunning(self):
+		if(self.xbmcCmmd.shutDown):
+			self.stop()
+			return 0
+		else:
+			return 1
 
 		
