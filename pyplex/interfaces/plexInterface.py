@@ -1,18 +1,21 @@
 import urllib2, re, xml.etree.cElementTree as et
 from urllib import urlencode
 from urlparse import urlparse
-import uuid, hmac, hashlib, base64, time 
+import uuid, hmac, hashlib, base64, time
+from plexAPI.server import Server
+
 from ..pyplexlogger.logger import pyPlexLogger
 
 class PlexMedia:
     def __init__(self, mediaurl):
         self.media_url = mediaurl
+        # print mediaurl
         self.l = pyPlexLogger("PlexMedia").logger
         
         f = urllib2.urlopen(mediaurl)
         rawXML = f.read()
         f.close()
-        self.l.info('XML string is: %s' % rawXML)
+        # self.l.info('XML string is: %s' % rawXML)
         tree = et.fromstring(rawXML)
 
         #get video
@@ -106,5 +109,5 @@ class PlexInterface:
     def __init__(self):
         pass
 
-    def getMedia(self, mediaurl):
-        return PlexMedia(mediaurl)
+    def getMedia(self, mediaurl, serverIP):
+        return PlexMedia(mediaurl, serverIP)

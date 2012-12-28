@@ -1,5 +1,5 @@
-from ..interfaces.plexInterface import PlexInterface
-from ..pyomx.pyomxplayer import OMXPlayer
+from interfaces.plexInterface import PlexInterface
+from pyomx.pyomxplayer import OMXPlayer
 from urlparse import urlparse
 from ..pyplexlogger.logger import pyPlexLogger
 
@@ -14,7 +14,7 @@ class xbmcCommands:
         self.shutDown = False
 
     def PlayMedia(self, fullpath, tag, unknown1, unknown2, unknown3):
-        self.l.info("playing media from %s" % fullpath)
+        self.l.info("playing media!")
         global parsed_path
         global media_key
         global duration
@@ -30,7 +30,7 @@ class xbmcCommands:
         transcodeURL = self.media.getTranscodeURL()
         normalURL = self.media.fileURL
         print normalURL
-        self.omx = OMXPlayer(normalURL, args=self.omxArgs, start_playback=True)
+        self.omx = OMXPlayer(transcodeURL, args=self.omxArgs, start_playback=True)
 
     def Pause(self, message):
         if(self.omx):
