@@ -1,5 +1,5 @@
-from interfaces.plexInterface import PlexInterface
-from pyomx.pyomxplayer import OMXPlayer
+from ..interfaces.plexInterface import PlexInterface
+from ..pyomx.pyomxplayer import OMXPlayer
 from urlparse import urlparse
 from ..pyplexlogger.logger import pyPlexLogger
 
@@ -14,7 +14,7 @@ class xbmcCommands:
         self.shutDown = False
 
     def PlayMedia(self, fullpath, tag, unknown1, unknown2, unknown3):
-        self.l.info("playing media!")
+        self.l.info("playing media from %s" % fullpath)
         global parsed_path
         global media_key
         global duration
