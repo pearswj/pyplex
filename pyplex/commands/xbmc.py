@@ -1,4 +1,5 @@
 from ..interfaces.plexInterface import PlexInterface
+from ..interfaces.plexAPI.server import Server
 from ..pyomx.pyomxplayer import OMXPlayer
 from urlparse import urlparse
 from ..pyplexlogger.logger import pyPlexLogger
@@ -21,18 +22,17 @@ class xbmcCommands:
         global duration
         
         parsed_path = urlparse(fullpath)
-        pprint(parsed_path)
-        media_path = parsed_path.scheme + "://" + parsed_path.netloc + tag
-
-        self.media = self.plex.getMedia(tag, parsed_path.netloc)
-        
-        #print 'mediapath', mediapath
+        # get info to locate the server
+        ip, port = parsed_path.netloc.split(':')
+        # initate the plex API server wrapper
+        server = Server(ip, port)
+        # Serach for media based on tag
+        media = server.getMedia(tag) #Media now contains all kind of information about the file
+        # media.transcodeURL is currentley not working
         if(self.omx):
             self.Stop()
-        # transcodeURL = self.media.getTranscodeURL()
-        # normalURL = self.media.fileURL
-        # print normalURL
-        # self.omx = OMXPlayer(transcodeURL, args=self.omxArgs, start_playback=True)
+
+        self.omx = OMXPlayer(media.fileURL, args=self.omxArgs, start_playback=True)
 
     def Pause(self, message):
         if(self.omx):
