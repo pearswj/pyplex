@@ -3,6 +3,7 @@ from ..pyomx.pyomxplayer import OMXPlayer
 from urlparse import urlparse
 from ..pyplexlogger.logger import pyPlexLogger
 
+from pprint import pprint
 class xbmcCommands:
     def __init__(self, omxArgs):
         self.l = pyPlexLogger("xbmcCommands").logger
@@ -14,23 +15,24 @@ class xbmcCommands:
         self.shutDown = False
 
     def PlayMedia(self, fullpath, tag, unknown1, unknown2, unknown3):
-        self.l.info("playing media from %s" % fullpath)
+        self.l.info("playing media!")
         global parsed_path
         global media_key
         global duration
         
         parsed_path = urlparse(fullpath)
+        pprint(parsed_path)
         media_path = parsed_path.scheme + "://" + parsed_path.netloc + tag
 
-        self.media = self.plex.getMedia(media_path)
+        self.media = self.plex.getMedia(tag, parsed_path.netloc)
         
         #print 'mediapath', mediapath
         if(self.omx):
             self.Stop()
-        transcodeURL = self.media.getTranscodeURL()
-        normalURL = self.media.fileURL
-        print normalURL
-        self.omx = OMXPlayer(normalURL, args=self.omxArgs, start_playback=True)
+        # transcodeURL = self.media.getTranscodeURL()
+        # normalURL = self.media.fileURL
+        # print normalURL
+        # self.omx = OMXPlayer(transcodeURL, args=self.omxArgs, start_playback=True)
 
     def Pause(self, message):
         if(self.omx):

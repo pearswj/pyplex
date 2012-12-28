@@ -1,51 +1,25 @@
 import urllib2, re, xml.etree.cElementTree as et
 from urllib import urlencode
 from urlparse import urlparse
-import uuid, hmac, hashlib, base64, time 
+import uuid, hmac, hashlib, base64, time
+from plexAPI.server import Server
+
 from ..pyplexlogger.logger import pyPlexLogger
-
+from pprint import pprint
 class PlexMedia:
-    def __init__(self, mediaurl):
-        self.media_url = mediaurl
+    def __init__(self, mediaurl, serverSceme):
         self.l = pyPlexLogger("PlexMedia").logger
-        
-        f = urllib2.urlopen(mediaurl)
-        rawXML = f.read()
-        f.close()
-        self.l.info('XML string is: %s' % rawXML)
-        tree = et.fromstring(rawXML)
-
-        #get video
-        self.videoTag = tree.find('./Video')
-        self.mediaTag = tree.find('./Video/Media')
-        self.partTag = tree.find('./Video/Media/Part')
-        self.mediaKey = self.videoTag.attrib['ratingKey']
-        parsed_path = urlparse(mediaurl)
-        self.fileURL = parsed_path.scheme + "://" + parsed_path.netloc + self.partTag.attrib['key']
-        self.duration = int(self.partTag.attrib['duration'])
-
-        self.media_type = "Video"
-        self.video_codec = self.mediaTag.attrib['videoCodec']
-        self.audio_codec = self.mediaTag.attrib['audioCodec']
-        self.width = self.mediaTag.attrib['width']
-        self.height = self.mediaTag.attrib['height']
-        self.title = self.videoTag.attrib['title']
-        try:
-            self.continueTime= self.videoTag.attrib['viewOffset']
-        except KeyError:
-            pass
-        self.duration = int(self.partTag.attrib['duration'])
-        self.playedURL = parsed_path.scheme + "://" + parsed_path.netloc + "/:/scrobble?key=" + str(self.mediaKey) + "&identifier=com.plexapp.plugins.library"
-        self.updateURL =  parsed_path.scheme + "://" + parsed_path.netloc + '/:/progress?key=' + str(self.mediaKey) + '&identifier=com.plexapp.plugins.library&time=%s&state=playing' 
-        self.transcodeBaseURL = parsed_path.scheme + "://" + parsed_path.netloc
-        self.transcodeURL = '/video/:/transcode/segmented/start.m3u8?'
+        self.media_url = mediaurl
+        server = serverSceme.split(':')
+        self.server = Server(server[0], server[1])
+        self.media = self.server.getMedia(mediaurl, self.server)
 
 
     def getTranscodeURL(self, extension='mkv', format='matroska', videoCodec='libx264', audioCodec=None, continuePlay=False, continueTime=None, videoWidth='1280', videoHeight='720', videoBitrate=None):
-        if(videoWidth > self.width):
-            videoWidth = self.width
-        if(videoHeight > self.height):
-            videoHeight = self.height
+        if(videoWidth > self.media['width']):
+            videoWidth = self.media['width']
+        if(videoHeight > self.media['height']):
+            videoHeight = self.media['height']
         self.session = uuid.uuid4()
         args = dict()
 #        args["width"] = videoWidth
@@ -69,7 +43,7 @@ class PlexMedia:
 #            args["audioCodec"] = audioCodec
 #        else:
 #            args["audioCodec"] = self.audio_codec
-        transcodeURL = self.transcodeURL
+        transcodeURL = self.server.transcodeURL
         transcodeURL += urlencode(args)
         atime = int(time.time())
         message = transcodeURL + "@%d" % atime
@@ -106,5 +80,5 @@ class PlexInterface:
     def __init__(self):
         pass
 
-    def getMedia(self, mediaurl):
-        return PlexMedia(mediaurl)
+    def getMedia(self, mediaurl, serverSceme):
+        return PlexMedia(mediaurl, serverSceme)
