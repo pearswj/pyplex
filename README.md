@@ -10,14 +10,30 @@ functionality is here, but I hope that it is reasonably easy to extend.
 ##Dependencies
 
 Must be installed by you:
++ omxplayer
 + libsdl with framebuffer and alsa support
 + avahi with dbus, gtk, and python support
-+ omxplayer
-
-Installed by setup.py:
 + tornado
 + requests
 + pygame
++ pexpect
+
+You must be running the latest raspberry pi firmware (https://github.com/raspberrypi/firmware), or else omxplayer won't compile.
+
+You must have at least 128 MB graphics memory, and overclocking is recommended. A Sample /boot/config.txt:
+
+    arm_freq=1000
+    core_freq=450
+    sdram_freq=450
+    over_voltage=2
+    force_turbo=1
+    gpu_mem=128
+
+    hdmi_force_hotplug=1 # needed for sound over hdmi
+    hdmi_drive=2
+
+
+ 
 
 ##How to build
 
