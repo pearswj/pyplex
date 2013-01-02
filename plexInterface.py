@@ -7,10 +7,10 @@ import uuid, hmac, hashlib, base64, time
 from myplex import loginMyPlex
 
 class PlexMedia:
-    def __init__(self, mediaurl):
+    def __init__(self, mediaurl, myPlexToken=None):
+    	self.myPlexToken = myPlexToken
         self.media_url = mediaurl
-        
-        
+       	
         f = urllib2.urlopen(mediaurl)
         rawXML = f.read()
         f.close()
@@ -40,24 +40,7 @@ class PlexMedia:
         self.updateURL =  parsed_path.scheme + "://" + parsed_path.netloc + '/:/progress?key=' + str(self.mediaKey) + '&identifier=com.plexapp.plugins.library&time=%s&state=playing' 
         self.transcodeBaseURL = parsed_path.scheme + "://" + parsed_path.netloc
         self.transcodeURL = '/video/:/transcode/segmented/start.m3u8?'
-    
-    def tryLoginMyplex(self):
-        configFile = os.path.join(os.path.expanduser("~"),".myplex.json")
-        if os.path.isfile(configFile):
-            try:
-                params = json.load(open(configFile))
-                user = params["username"]
-                password = params["password"]
-                token = loginMyPlex(user,password)
-
-                if (token != None):
-                    self.myPlexToken = token
-                
-            except:
-                print "Could not load myPlex info from {:}".format(configFile)
-
-        
-        
+           
 
     def getTranscodeURL(self, extension='mkv', format='matroska', videoCodec='libx264', audioCodec=None, continuePlay=False, continueTime=None, videoWidth='1280', videoHeight='720', videoBitrate=None):
         if(videoWidth > self.width):
@@ -124,7 +107,27 @@ class PlexInterface:
     transcode_public = 'KQMIY6GATPC63AIMC4R2'
 
     def __init__(self):
-        pass
+	self.tryLoginMyPlex()
 
     def getMedia(self, mediaurl):
-        return PlexMedia(mediaurl)
+        return PlexMedia(mediaurl,self.myPlexToken)
+
+ 
+    def tryLoginMyPlex(self):
+	self.myPlexToken = None        
+        configFile = os.path.join(os.path.expanduser("~"),".myplex.json")
+        if os.path.isfile(configFile):
+            try:
+                params = json.load(open(configFile))
+                user = params["username"]
+                password = params["password"]
+                token = loginMyPlex(user,password)
+
+                if (token != None):
+                    self.myPlexToken = token
+                
+            except:
+                print "Could not load myPlex info from {:}".format(configFile)
+
+        
+
