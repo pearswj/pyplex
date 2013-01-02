@@ -1,10 +1,11 @@
-import os, json
+import os
 import urllib2, re, xml.etree.cElementTree as et
 from urllib import urlencode
 from urlparse import urlparse
 import uuid, hmac, hashlib, base64, time 
 
 from myplex import loginMyPlex
+from myplex import loadAuthentication
 
 class PlexMedia:
     def __init__(self, mediaurl, myPlexToken=None):
@@ -107,27 +108,20 @@ class PlexInterface:
     transcode_public = 'KQMIY6GATPC63AIMC4R2'
 
     def __init__(self):
-	self.tryLoginMyPlex()
+        self.tryLoginMyPlex()
 
     def getMedia(self, mediaurl):
         return PlexMedia(mediaurl,self.myPlexToken)
 
  
     def tryLoginMyPlex(self):
-	self.myPlexToken = None        
-        configFile = os.path.join(os.path.expanduser("~"),".myplex.json")
-        if os.path.isfile(configFile):
-            try:
-                params = json.load(open(configFile))
-                user = params["username"]
-                password = params["password"]
-                token = loginMyPlex(user,password)
+        self.myPlexToken = None        
 
-                if (token != None):
-                    self.myPlexToken = token
-                
-            except:
-                print "Could not load myPlex info from {:}".format(configFile)
+        (user,password) = loadAuthentication()
+        token = loginMyPlex(user,password)
 
+        if (token != None):
+            self.myPlexToken = token
+     
         
 

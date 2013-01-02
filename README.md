@@ -19,13 +19,24 @@ Installed by setup.py:
 + requests
 + pygame
 
-See https://github.com/dalehamel/PlexOverlay for help installing omxplayer on gentoo
-
 ##How to build
 
 ###Gentoo
 
-Instructions to be added
+See https://github.com/dalehamel/PlexOverlay for the pyplex ebuild. 
+
+    echo 'PORTDIR\_OVERLAY="/usr/local/portage"' >> /etc/portage/make.conf.
+    mkdir -p /usr/local/portage
+    cd /usr/local/portage
+    git clone  https://github.com/dalehamel/PlexOverlay 
+    ln -s PlexOverlay/*
+    emerge -av pyplex --autounmask-write
+    etc-update # merge strategy 3
+    emerge -av pyplex #this may take quite a while...
+
+
+
+
 
 ###Raspbian
 
@@ -53,25 +64,30 @@ Instructions to be added
 
 This will install a script called pyplex to /usr/bin (or wherever your system puts it)
 
+Or you can run the package without installing it by running scripts/pyplex
+
 ### Usage:
 
-
-    usage: [-h] [--hdmi]
+    usage: pyplex [-h] [--hdmi] [--user USER] [--password PASSWORD]
 
     A daemon to listen for UDP plex playback requests, and relay them to OMXPlayer
 
     optional arguments:
-      -h, --help  show this help message and exit
-        --hdmi      Send audio over HDMI instead of 3.5mm jack
+        -h, --help           show this help message and exit
+        --hdmi               Send audio over HDMI instead of 3.5mm jack
+        --user USER          myPlex username. Will be saved once provided or updated if already exists.
+        --password PASSWORD  myPlex password. Will be saved once provided or updated if already exists.
 
-
+        
 ### Setup myPlex
 
-Create a file at ~/.myplex.json of the form:
- { "username":"you@youremail",
-   "password":"yoursecretpassword"}
+
+Give pyplex your myPlex username and password:
+
+    pyplex --user you@youremail.com --password yoursecret
 
 
+This will store your authentication data in ~/.myplex.json. This is just a flatfile, so limit who has access to viewing it!
 
 ### Launch the daemon
 
