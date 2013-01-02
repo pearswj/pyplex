@@ -1,14 +1,16 @@
-import urllib2, re, xml.etree.cElementTree as et
-from pyomxplayer import OMXPlayer
-from urlparse import urlparse
-import avahi, dbus, sys, platform
-from pprint import pprint
-import socket, pygame.image, pygame.display, subprocess, signal, os, logging
-from threading import Thread
 import Queue
+import pygame.image, pygame.display
+import socket, subprocess, signal, os, logging
+import urllib2, re, xml.etree.cElementTree as et
+from urlparse import urlparse
+from threading import Thread
+from pprint import pprint
+import avahi, dbus, sys, platform
+
 import udplistener
 import httplistener
 from plexInterface import PlexInterface
+from pyomxplayer import OMXPlayer
 
 __all__ = ["ZeroconfService"]
 class ZeroconfService:

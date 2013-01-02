@@ -1,7 +1,10 @@
+import os, json
 import urllib2, re, xml.etree.cElementTree as et
 from urllib import urlencode
 from urlparse import urlparse
 import uuid, hmac, hashlib, base64, time 
+
+from myplex import loginMyPlex
 
 class PlexMedia:
     def __init__(self, mediaurl):
@@ -37,7 +40,24 @@ class PlexMedia:
         self.updateURL =  parsed_path.scheme + "://" + parsed_path.netloc + '/:/progress?key=' + str(self.mediaKey) + '&identifier=com.plexapp.plugins.library&time=%s&state=playing' 
         self.transcodeBaseURL = parsed_path.scheme + "://" + parsed_path.netloc
         self.transcodeURL = '/video/:/transcode/segmented/start.m3u8?'
+    
+    def tryLoginMyplex(self):
+        configFile = os.path.join(os.path.expanduser("~"),".myplex.json")
+        if os.path.isfile(configFile):
+            try:
+                params = json.load(open(configFile))
+                user = params["username"]
+                password = params["password"]
+                token = loginMyPlex(user,password)
 
+                if (token != None):
+                    self.myPlexToken = token
+                
+            except:
+                print "Could not load myPlex info from {:}".format(configFile)
+
+        
+        
 
     def getTranscodeURL(self, extension='mkv', format='matroska', videoCodec='libx264', audioCodec=None, continuePlay=False, continueTime=None, videoWidth='1280', videoHeight='720', videoBitrate=None):
         if(videoWidth > self.width):
@@ -76,6 +96,8 @@ class PlexMedia:
         plexAccess['X-Plex-Access-Key'] = PlexInterface.transcode_public
         plexAccess['X-Plex-Access-Time'] = atime
         plexAccess['X-Plex-Access-Code'] = sig
+        if self.myPlexToken != None:
+            plexAccess['X-Plex-Token'] = self.myPlexToken
         plexAccess['X-Plex-Client-Capabilities'] = 'protocols=http-live-streaming,http-mp4-streaming,http-mp4-video,http-mp4-video-720p,http-streaming-video,http-streaming-video-720p;videoDecoders=h264{profile:high&resolution:1080&level:41};audioDecoders=aac,mp3,ac3,dts'
         transcodeURL = self.transcodeBaseURL + transcodeURL + "&" + urlencode(plexAccess)
         return transcodeURL
