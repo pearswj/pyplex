@@ -27,9 +27,11 @@ class hello(tornado.web.RequestHandler):
         print("Got request, gave Hello")
         self.write('Hello, World')
 
+
 class httplistener(threading.Thread):
     def __init__(self, queue):
         super(httplistener, self).__init__()
+        self.daemon = True
         self.queue = queue
         self._stop = threading.Event()
         self.app = tornado.web.Application([(r'/xbmcCmds/xbmcHttp', listenerClass, dict(queue=queue)), (r'/', hello)])

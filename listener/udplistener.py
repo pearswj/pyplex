@@ -4,6 +4,7 @@ import socket
 class udplistener(threading.Thread):
     def __init__(self, queue):
         super(udplistener, self).__init__()
+        self.daemo = True
         self.queue = queue
         self._stop = threading.Event()
 
