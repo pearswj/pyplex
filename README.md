@@ -25,7 +25,7 @@ Installed by setup.py:
 
 See https://github.com/dalehamel/PlexOverlay for the pyplex ebuild. 
 
-    echo 'PORTDIR\_OVERLAY="/usr/local/portage"' >> /etc/portage/make.conf.
+    echo 'PORTDIR_OVERLAY="/usr/local/portage"' >> /etc/portage/make.conf.
     mkdir -p /usr/local/portage
     cd /usr/local/portage
     git clone  https://github.com/dalehamel/PlexOverlay 
