@@ -9,18 +9,23 @@ functionality is here, but I hope that it is reasonably easy to extend.
 
 ##Dependencies
 
+Must be installed by you:
 + libsdl with framebuffer and alsa support
-+ pygame
 + avahi with dbus, gtk, and python support
++ omxplayer
+
+Installed by setup.py:
 + tornado
 + requests
-+ omxplayer
++ pygame
+
+See https://github.com/dalehamel/PlexOverlay for help installing omxplayer on gentoo
 
 ##How to build
 
 ###Gentoo
 
-Create a local portage overlay and emerge it
+Instructions to be added
 
 ###Raspbian
 
@@ -41,17 +46,38 @@ Create a local portage overlay and emerge it
 	
 ##How to use
 
+
+### Install to system
+
+    python setup.py install
+
+This will install a script called pyplex to /usr/bin (or wherever your system puts it)
+
+### Usage:
+
+
+    usage: [-h] [--hdmi]
+
+    A daemon to listen for UDP plex playback requests, and relay them to OMXPlayer
+
+    optional arguments:
+      -h, --help  show this help message and exit
+        --hdmi      Send audio over HDMI instead of 3.5mm jack
+
+
 ### Setup myPlex
 
 Create a file at ~/.myplex.json of the form:
  { "username":"you@youremail",
    "password":"yoursecretpassword"}
 
+
+
 ### Launch the daemon
 
 Launch with 
 
-    python pyplex.py [hdmi]
+    pyplex [--hdmi]
 
 Where [hdmi] is optional to make sure audio is going
 over hdmi, leaving it out will devault to the 3,5mm jack output.

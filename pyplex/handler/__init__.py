@@ -2,27 +2,21 @@ import Queue
 import traceback
 import socket, subprocess, signal, os, logging
 from pprint import pprint
-import sys, platform
+import platform
 
-import listener.udplistener as udplistener
-import listener.httplistener as httplistener
-from zeroconf import ZeroconfService
-from xbmc import xbmcCommands
-from gui import BackgroundImage
+import pyplex.listener.udplistener as udplistener
+import pyplex.listener.httplistener as httplistener
+from pyplex.zeroconf import ZeroconfService
+from pyplex.xbmc import xbmcCommands
+from pyplex.gui import BackgroundImage
   
-def main():
+def mainLoop(hdmi):
     print "starting, please wait..."
-    global service
-    global queue
-    global parsed_path
-    global media_key
-    global duration
+    hostname = platform.uname()[1]
     duration = 0
-    args = len(sys.argv)
-    if args > 1: 
-        if sys.argv[1] == "hdmi":
-            omxCommand = '-o hdmi'
-            print "Audo output over HDMI"
+    if(hdmi):
+        omxCommand = '-o hdmi'
+        print "Audo output over HDMI"
     else:
         omxCommand = ''
         print "Audio output over 3,5mm jack"
@@ -38,8 +32,7 @@ def main():
     http = httplistener.httplistener(queue)
     http.setDaemon(True)
     http.start()
-    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-    image = BackgroundImage('logo.png')
+    image = BackgroundImage(os.path.join(os.path.dirname(os.path.dirname(__file__)),'images/logo.png'))
     #image.set()
     while True:
         try:
@@ -60,10 +53,9 @@ def main():
             # print omx.position
             xbmcCmmd.updatePosition()
 
-if __name__ == "__main__":
-    hostname = platform.uname()[1]
+def runLoop(hdmi=False):
     try:
-        main()
+        mainLoop(hdmi)
     except Exception as e:
         print "Caught exception"
         #error(str(e))

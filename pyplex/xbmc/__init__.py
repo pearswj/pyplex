@@ -4,8 +4,8 @@
 #import urllib2, re, xml.etree.cElementTree as et
 from urlparse import urlparse
 
-from omxplayer import OMXPlayer
-from plexapi.plexInterface import PlexInterface
+from pyplex.omxplayer import OMXPlayer
+from pyplex.plexapi.plexInterface import PlexInterface
 
 class xbmcCommands:
     def __init__(self, omxArgs):
