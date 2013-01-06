@@ -90,7 +90,7 @@ class PlexMedia:
         try:
             f = urllib2.urlopen(self.playedURL)
         except urllib2.HTTPError:
-            print "Failed to update plex that item was played: %s" % setPlayPos
+#            print "Failed to update plex that item was played: %s" % setPlayPos
             pass
 
     def updatePosition(self, posMilli):
@@ -98,7 +98,7 @@ class PlexMedia:
         try:
             f = urllib2.urlopen((self.updateURL % (posMilli)))
         except urllib2.HTTPError:
-            print "Failed to update plex play time, url: %s" % setPlayPos
+#            print "Failed to update plex play time, url: %s" % setPlayPos
             pass
         
         
