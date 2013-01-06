@@ -10,16 +10,16 @@ from pyplex.zeroconf import ZeroconfService
 from pyplex.xbmc import xbmcCommands
 from pyplex.gui import BackgroundImage
   
-def mainLoop(hdmi):
+def mainLoop(analog):
     print "starting, please wait..."
     hostname = platform.uname()[1]
     duration = 0
-    if(hdmi):
-        omxCommand = '-o hdmi'
-        print "Audo output over HDMI"
-    else:
+    if(analog):
         omxCommand = ''
         print "Audio output over 3,5mm jack"
+    else:
+        omxCommand = '-o hdmi'
+        print "Audo output over HDMI"
     xbmcCmmd = xbmcCommands(omxCommand)
     media_key = None
     parsed_path = None
@@ -53,9 +53,9 @@ def mainLoop(hdmi):
             # print omx.position
             xbmcCmmd.updatePosition()
 
-def runLoop(hdmi=False):
+def runLoop(analog=False):
     try:
-        mainLoop(hdmi)
+        mainLoop(analog)
     except Exception as e:
         print "Caught exception"
         #error(str(e))

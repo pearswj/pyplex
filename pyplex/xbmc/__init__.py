@@ -3,9 +3,30 @@
 #import socket, subprocess, signal, os, logging
 #import urllib2, re, xml.etree.cElementTree as et
 from urlparse import urlparse
-
+from threading import Thread
 from pyplex.omxplayer import OMXPlayer
 from pyplex.plexapi.plexInterface import PlexInterface
+
+
+class StopThread(Thread):
+
+
+    def run( self ):
+        import requests
+        import traceback
+        import time
+        from requests import post
+        
+        print "Wating before killing transcode stream..."
+        time.sleep(10)
+        killCommand = "/video/:/transcode/segmented/stop"
+        killUrl = "http://"+self.server+killCommand
+        print "Stopping transcode with "+killUrl
+        requests.post(killUrl) 
+
+
+
+
 
 class xbmcCommands:
     def __init__(self, omxArgs):
@@ -18,6 +39,7 @@ class xbmcCommands:
         global parsed_path
         global media_key
         global duration
+
         
         parsed_path = urlparse(fullpath)
         media_path = parsed_path.scheme + "://" + parsed_path.netloc + tag
@@ -28,6 +50,8 @@ class xbmcCommands:
         if(self.omx):
             self.Stop()
         transcodeURL = self.media.getTranscodeURL()
+        requestInfo = urlparse(transcodeURL)
+        self.server = requestInfo.netloc
         print transcodeURL
         self.omx = OMXPlayer(transcodeURL, args=self.omxArgs, start_playback=True)
 
@@ -47,6 +71,10 @@ class xbmcCommands:
             self.omx.stop()
             self.omx = None
 
+        stopper = StopThread()
+        stopper.server = self.server
+        stopper.start()
+    
     def stopPyplex(self, message):
         self.Stop()
         exit()
