@@ -16,14 +16,14 @@ class OMXPlayer(object):
 
     _LAUNCH_CMD = '/usr/bin/omxplayer -s %s %s'
     _PAUSE_CMD = 'p'
-    _TOGGLE_SUB_CMD = 's'
+    _TOGGLE_SUB_CMD = 't'
     _QUIT_CMD = 'q'
     _INCREASE_SPEED = '2'
     _DECREASE_SPEED = '1'
-    _JUMP_600_REV = '\x1b\x5b\x42'
-    _JUMP_600_FWD = '\x1b\x5b\x41'
-    _JUMP_30_FWD = '\x1b\x5b\x43'
-    _JUMP_30_REV = '\x1b\x5b\x44'
+    _JUMP_600_REV = 's'
+    _JUMP_600_FWD = 'w'
+    _JUMP_30_FWD = 'd'
+    _JUMP_30_REV = 'a'
 
     paused = False
     subtitles_visible = True
@@ -105,7 +105,7 @@ class OMXPlayer(object):
                                             self._DONE_REXP])
             if index == 1: continue
             elif index in (2, 3):
-                self.finished = True
+                #self.finished = True
                 break
             else:
                 self.position = float(self._process.match.group(1))

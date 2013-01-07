@@ -2,18 +2,17 @@
 
 ##Introduction
 
-This is an implementation of an idea on the Plex forums - that the Raspberry Pi
-could use a Plex client that had no interface, and was just designed to be 
-operated using an iOS device or similar as a remote. Only the very barest bones
-functionality is here, but I hope that it is reasonably easy to extend.
+This is an implementation of an idea on the Plex forums - that the Raspberry Pi could use a Plex client that had no interface, and was just designed to be  operated using an iOS, android device, or plex web app.
 
 ##Dependencies
+
+Server running the latest version of PMS, or may experience transcode buffer overrun problems.
 
 Must be installed by you:
 + omxplayer
 + libsdl with framebuffer and alsa support
 + avahi with dbus, gtk, and python support
-+ tornado
++ twisted-web
 + requests
 + pygame
 + pexpect
@@ -39,6 +38,8 @@ You must have at least 128 MB graphics memory, and overclocking is recommended. 
 
 ###Gentoo
 
+I **highly** recommend setting up a crossdev distcc chain to speed up building all of the dependencies. For help on that: http://wiki.gentoo.org/wiki/Raspberry_Pi_Quick_Install_Guide#Cross_building
+
 See https://github.com/dalehamel/PlexOverlay for the pyplex ebuild. 
 
     echo 'PORTDIR_OVERLAY="/usr/local/portage"' >> /etc/portage/make.conf.
@@ -48,7 +49,7 @@ See https://github.com/dalehamel/PlexOverlay for the pyplex ebuild.
     ln -s PlexOverlay/*
     emerge -av pyplex --autounmask-write
     etc-update # merge strategy 3
-    emerge -av pyplex #this may take quite a while...
+    emerge -av pyplex #this may take quite a while to build all of the dependencies...
 
 
 
@@ -66,7 +67,7 @@ See https://github.com/dalehamel/PlexOverlay for the pyplex ebuild.
 	sudo reboot
 	sudo apt-get install avahi-daemon
 	sudo apt-get install python-pip
-	sudo pip install tornado
+	sudo pip install twisted-web
 	sudo pip install pexpect
 	sudo pip install requests
 	sudo apt-get install python-avahi 
@@ -97,13 +98,16 @@ Or you can run the package without installing it by running scripts/pyplex
         
 ### Setup myPlex
 
+If you wish to playback somewhere other than on the same subnet that the server is located, you must setup myplex:
 
 Give pyplex your myPlex username and password:
 
     pyplex --user you@youremail.com --password yoursecret
 
 
-This will store your authentication data in ~/.myplex.json. This is just a flatfile, so limit who has access to viewing it!
+This will store your authentication data in ~/.myplex.json. This is just a flatfile, so limit who has access to viewing it! Note to self: should change this to only store token...
+
+In order to playback on a different subnet than the server you wish to play from, you must set up a "dummy" server on the same subnet as pyplex. This is because your main server can't see the avahi broadcast from pyplex, and an intermediate server is needed as a relay for the initial handshaking (it won't do any transcoding though).
 
 ### Launch the daemon
 

@@ -8,23 +8,6 @@ from pyplex.omxplayer import OMXPlayer
 from pyplex.plexapi.plexInterface import PlexInterface
 
 
-class StopThread(Thread):
-
-
-    def run( self ):
-        import requests
-        import traceback
-        import time
-        from requests import post
-        
-        print "Wating before killing transcode stream..."
-        time.sleep(10)
-        killCommand = "/video/:/transcode/segmented/stop"
-        killUrl = "http://"+self.server+killCommand
-        print "Stopping transcode with "+killUrl
-        requests.post(killUrl) 
-
-
 
 
 
@@ -71,13 +54,6 @@ class xbmcCommands:
             self.omx.stop()
             self.omx = None
 
-        stopper = StopThread()
-        stopper.server = self.server
-        stopper.start()
-    
-    def stopPyplex(self, message):
-        self.Stop()
-        exit()
 
     def SkipNext(self, message = None):
         if(self.omx):
@@ -112,7 +88,10 @@ class xbmcCommands:
         return miliseconds
 
     def getPosMilli(self):
-        return self.getMilliseconds(self.omx.position)
+        position = None
+        if ( self.omx != None):
+            position = self.getMilliseconds(self.omx.position)
+        return position
     
     def setPlayed(self):
         self.media.setPlayed()
@@ -131,9 +110,11 @@ class xbmcCommands:
 
     def updatePosition(self):
         if self.isFinished():
-            if (self.getPosMilli() > (self.media.duration * .95)):
+            if (self.media != None and self.getPosMilli() > (self.media.duration * .95)):
                 self.setPlayed()
-            self.Stop()
+            #self.Stop()
         else:
-            self.media.updatePosition(self.getPosMilli())
+            position = self.getPosMilli()
+            if ( position != None ):
+                self.media.updatePosition( position )
  

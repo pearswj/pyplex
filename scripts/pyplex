@@ -2,31 +2,30 @@
 
 import argparse
 try:
-    from pyplex.handler import runLoop
+    from pyplex.core import main
 except:
-    #package hasn't been installed yet, so run from localdir
-    #useful for testing
+#package hasn't been installed yet, so run from localdir
+#useful for testing
     import sys,os
     path= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(path)
-    from pyplex.handler import runLoop
+    from pyplex.core import main
 
-from pyplex.plexapi.myplex import storeAuthentication
+    from pyplex.plexapi.myplex import storeAuthentication
 
 
 def storeAuthdata( user, password):
     if user != None and password != None:
-
         storeAuthentication(user, password)
     elif user !=None or password != None:
         print "Both username and password must be provided to be saved"
 
 if __name__ == '__main__':
-     parser = argparse.ArgumentParser(description='A daemon to listen for UDP plex playback requests, and relay them to OMXPlayer')
-     parser.add_argument('--analog', action='store_true',help="Send audio over 3.5mm jack instead of HDMI")
-     parser.add_argument('--user',  help="myPlex username. Will be saved once provided or updated if already exists.")
-     parser.add_argument('--password',  help="myPlex password. Will be saved once provided or updated if already exists.")
-     args = parser.parse_args()
-     storeAuthdata( args.user, args.password)
-     runLoop(args.analog)
+    parser = argparse.ArgumentParser(description='A daemon to listen for UDP plex playback requests, and relay them to OMXPlayer')
+    parser.add_argument('--analog', action='store_true',help="Send audio over 3.5mm jack instead of HDMI")
+    parser.add_argument('--user',  help="myPlex username. Will be saved once provided or updated if already exists.")
+    parser.add_argument('--password',  help="myPlex password. Will be saved once provided or updated if already exists.")
+    args = parser.parse_args()
+    storeAuthdata( args.user, args.password)
+    main(args.analog)
     
