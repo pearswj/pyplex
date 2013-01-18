@@ -32,7 +32,11 @@ class xbmcCommands:
         #print 'mediapath', mediapath
         if(self.omx):
             self.Stop()
-        transcodeURL = self.media.getTranscodeURL()
+        #transcodeURL = self.media.getTranscodeURL()
+        # transcodeURL not working otb in mplayer, fileURL fails for mkv
+        #transcodeURL = self.media.fileURL
+        # resorting to getting the path to the actual file (breaks myPlex support)
+        transcodeURL = '"' + self.media.file + '"' # quoted to avoid white-space errors
         requestInfo = urlparse(transcodeURL)
         self.server = requestInfo.netloc
         print transcodeURL
@@ -65,11 +69,13 @@ class xbmcCommands:
 
     def StepForward(self, message = None):
         if(self.omx):
-            self.omx.increase_speed()
+            #self.omx.increase_speed()
+            self.omx.jump_fwd_30()
 
     def StepBack(self, message = None):
         if(self.omx):
-            self.omx.decrease_speed()
+            #self.omx.decrease_speed()
+            self.omx.jump_rev_30()
 
     def BigStepForward(self, message = None):
         if(self.omx):
@@ -78,6 +84,10 @@ class xbmcCommands:
     def BigStepBack(self, message = None):
         if(self.omx):
             self.omx.jump_rev_600()
+
+    def setvolume(self, v):
+        if(self.omx):
+            self.omx.set_volume(v)
 
     def getMilliseconds(self,s):
         hours, minutes, seconds = (["0", "0"] + ("%s" % s).split(":"))[-3:]

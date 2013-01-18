@@ -24,6 +24,7 @@ class PlexMedia:
         self.mediaKey = self.videoTag.attrib['ratingKey']
         parsed_path = urlparse(mediaurl)
         self.fileURL = parsed_path.scheme + "://" + parsed_path.netloc + self.partTag.attrib['key']
+        self.file = self.partTag.attrib['file']
         self.duration = int(self.partTag.attrib['duration'])
 
         self.media_type = "Video"

@@ -1,4 +1,5 @@
 #Courtesy of https://github.com/jbaiter/pyomxplayer.git
+#Modified for MPlayer
 
 import pexpect
 import re
@@ -14,16 +15,17 @@ class OMXPlayer(object):
     _STATUS_REXP = re.compile(r"V :\s*([\d.]+).*")
     _DONE_REXP = re.compile(r"have a nice day.*")
 
-    _LAUNCH_CMD = '/usr/bin/omxplayer -s %s %s'
-    _PAUSE_CMD = 'p'
-    _TOGGLE_SUB_CMD = 't'
-    _QUIT_CMD = 'q'
-    _INCREASE_SPEED = '2'
-    _DECREASE_SPEED = '1'
-    _JUMP_600_REV = 's'
-    _JUMP_600_FWD = 'w'
-    _JUMP_30_FWD = 'd'
-    _JUMP_30_REV = 'a'
+    _LAUNCH_CMD = '/usr/bin/mplayer -slave -quiet %s'
+    _PAUSE_CMD = 'pause\n'
+    _TOGGLE_SUB_CMD = 'sub_visibility\n'
+    _QUIT_CMD = 'quit\n'
+    _INCREASE_SPEED = 'speed_incr +1\n'
+    _DECREASE_SPEED = 'speed_incr -1\n'
+    _JUMP_600_REV = 'seek -600\n'
+    _JUMP_600_FWD = 'seek +600\n'
+    _JUMP_30_FWD = 'seek +30\n'
+    _JUMP_30_REV = 'seek -30\n'
+    _SET_VOL = 'volume %s 1\n'
 
     paused = False
     subtitles_visible = True
@@ -32,7 +34,8 @@ class OMXPlayer(object):
         self.position = 0
         if not args:
             args = ""
-        cmd = self._LAUNCH_CMD % (mediafile, args)
+        pexpect.run("xset dpms force on") # wake the display
+        cmd = self._LAUNCH_CMD % (mediafile) # no args necessary
         self._process = pexpect.spawn(cmd)
         
         #Set defaults, just in case we dont get them
@@ -167,7 +170,8 @@ class OMXPlayer(object):
         raise NotImplementedError
 
     def set_volume(self, volume):
-        raise NotImplementedError
+        vol_cmd = self._SET_VOL % volume
+        self._process.send(vol_cmd)
 
     def seek(self, minutes):
         raise NotImplementedError
