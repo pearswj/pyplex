@@ -128,6 +128,8 @@ class xbmcCommands:
         if self.isFinished():
             if (self.media != None and self.getPosMilli() > (self.media.duration * .95)):
                 self.setPlayed()
+                self.media = None
+                self.omx = None
             #self.Stop()
         else:
             position = self.getPosMilli()
