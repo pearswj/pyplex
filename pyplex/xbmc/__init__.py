@@ -18,7 +18,7 @@ class xbmcCommands:
         self.omx = None
         self.omxArgs = omxArgs
 
-    def PlayMedia(self, fullpath, tag, unknown1, unknown2, unknown3):
+    def PlayMedia(self, fullpath, tag, unknown1, unknown2, viewOffset):
         global parsed_path
         global media_key
         global duration
@@ -41,6 +41,12 @@ class xbmcCommands:
         self.server = requestInfo.netloc
         print transcodeURL
         self.omx = OMXPlayer(transcodeURL, args=self.omxArgs, start_playback=True)
+
+        # resume from "viewOffset" (mplayer only)
+        try:
+            self.omx._process.send('seek %i 2\n' % int(int(viewOffset)/1000))
+        except ValueError:
+            pass
 
     def Pause(self, message):
         if(self.omx):
