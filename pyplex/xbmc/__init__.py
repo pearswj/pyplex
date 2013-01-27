@@ -17,6 +17,7 @@ class xbmcCommands:
         self.plex = PlexInterface()
         self.omx = None
         self.omxArgs = omxArgs
+        self.volume = 60
 
     def PlayMedia(self, fullpath, tag, unknown1, unknown2, viewOffset):
         global parsed_path
@@ -41,6 +42,8 @@ class xbmcCommands:
         self.server = requestInfo.netloc
         print transcodeURL
         self.omx = OMXPlayer(transcodeURL, args=self.omxArgs, start_playback=True)
+
+        self.omx.set_volume(self.volume)
 
         # resume from "viewOffset" (mplayer only)
         try:
@@ -94,6 +97,7 @@ class xbmcCommands:
     def setvolume(self, v):
         if(self.omx):
             self.omx.set_volume(v)
+        self.volume = v
 
     def getMilliseconds(self,s):
         hours, minutes, seconds = (["0", "0"] + ("%s" % s).split(":"))[-3:]
