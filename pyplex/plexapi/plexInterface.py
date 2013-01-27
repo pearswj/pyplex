@@ -11,6 +11,12 @@ class PlexMedia:
     def __init__(self, mediaurl, myPlexToken=None):
     	self.myPlexToken = myPlexToken
         self.media_url = mediaurl
+
+        if myPlexToken:
+            # add X-Plex-Token header to every request
+            opener = urllib2.build_opener()
+            opener.addheaders = [('X-Plex-Token', myPlexToken)]
+            urllib2.install_opener(opener)
        	
         f = urllib2.urlopen(mediaurl)
         rawXML = f.read()
